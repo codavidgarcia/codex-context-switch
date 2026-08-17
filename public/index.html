@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#F3F5F2">
+    <meta name="description" content="A local, reversible control panel for Codex context-window settings.">
+    <title>Codex Context Switch</title>
+    <link rel="icon" href="/mark.svg" type="image/svg+xml">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" type="module"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#controls" data-i18n="skip">Skip to settings</a>
+
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Codex Context Switch">
+        <img src="/mark.svg" alt="" width="32" height="32">
+        <span>Context Switch</span>
+      </a>
+      <div class="topbar-actions">
+        <div class="status-chip" id="statusChip" data-state="loading">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="statusText" data-i18n="loading">Reading config…</span>
+        </div>
+        <button class="language-toggle" id="languageToggle" type="button" aria-label="Cambiar idioma a español">
+          ES
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="workbench" aria-labelledby="pageTitle">
+        <div class="control-column" id="controls">
+          <div class="intro">
+            <p class="kicker" data-i18n="kicker">GPT-5.6 SOL · LOCAL CONTROL</p>
+            <h1 id="pageTitle" data-i18n="title">Give Codex the room you choose.</h1>
+            <p class="lede" data-i18n="lede">Set the context window and compaction line. Apply once; restore the previous setup whenever you want.</p>
+          </div>
+
+          <form id="settingsForm" novalidate>
+            <fieldset class="context-fieldset">
+              <legend data-i18n="contextWindow">Context window</legend>
+              <div class="reading-row">
+                <label class="number-field number-field-primary" for="contextInput">
+                  <span class="sr-only" data-i18n="contextTokens">Context tokens</span>
+                  <input id="contextInput" name="contextWindow" type="number" inputmode="numeric" min="16000" max="1050000" step="1000" value="1000000">
+                  <span aria-hidden="true" data-i18n="tokens">tokens</span>
+                </label>
+                <div class="preset-cluster" aria-label="Context presets" data-i18n-aria="presets">
+                  <button class="preset" type="button" data-context="400000">400K</button>
+                  <button class="preset" type="button" data-context="750000">750K</button>
+                  <button class="preset" type="button" data-context="1000000">1M</button>
+                  <button class="preset" type="button" data-context="1050000" data-i18n="max">MAX</button>
+                </div>
+              </div>
+
+              <div class="context-rail" aria-hidden="true">
+                <progress class="rail-context" id="contextProgress" max="1050000" value="1000000"></progress>
+                <progress class="rail-compact" id="compactProgress" max="1050000" value="900000"></progress>
+                <input id="contextRange" type="range" tabindex="-1" min="16000" max="1050000" step="1000" value="1000000" aria-hidden="true">
+                <span class="rail-stop"></span>
+              </div>
+              <div class="rail-scale" aria-hidden="true">
+                <span>0</span>
+                <span>250K</span>
+                <span>500K</span>
+                <span>750K</span>
+                <span>1.05M</span>
+              </div>
+            </fieldset>
+
+            <div class="compact-row">
+              <div>
+                <label for="compactInput" data-i18n="compactAt">Compact history at</label>
+                <p class="field-note" data-i18n="compactNote">Leaves room for the answer and tool output.</p>
+              </div>
+              <label class="number-field number-field-secondary" for="compactInput">
+                <input id="compactInput" name="compactLimit" type="number" inputmode="numeric" min="8000" max="1049000" step="1000" value="900000">
+                <span aria-hidden="true" data-i18n="tokens">tokens</span>
+              </label>
+              <button class="ratio-button" id="ratioButton" type="button" data-i18n="setNinety">Set 90%</button>
+            </div>
+
+            <div class="headroom-line">
+              <span data-i18n="headroom">Headroom</span>
+              <output id="headroomOutput" for="contextInput compactInput">100,000 · 10%</output>
+            </div>
+
+            <div class="form-message" id="formMessage" role="alert" hidden></div>
+
+            <div class="action-row">
+              <button class="primary-action" id="applyButton" type="submit">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8 14.5 16 5.5"/></svg>
+                <span data-i18n="apply">Apply setup</span>
+              </button>
+              <button class="secondary-action" id="revertButton" type="button" disabled>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7H2.5V4.5M3 7a7 7 0 1 1 .7 7.8"/></svg>
+                <span data-i18n="restore">Restore previous setup</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="proof-column" aria-labelledby="previewTitle">
+          <div class="proof-header">
+            <div>
+              <p class="proof-label" data-i18n="willWrite">WILL WRITE</p>
+              <h2 id="previewTitle">config.toml</h2>
+            </div>
+            <button class="copy-button dark-focus" id="copyButton" type="button">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="6" y="6" width="10" height="10" rx="2"/><path d="M4 13H3.5A1.5 1.5 0 0 1 2 11.5v-8A1.5 1.5 0 0 1 3.5 2h8A1.5 1.5 0 0 1 13 3.5V4"/></svg>
+              <span data-i18n="copy">Copy</span>
+            </button>
+          </div>
+          <pre class="config-preview" id="configPreview"><code><span class="code-key">model</span> = <span class="code-string">"gpt-5.6-sol"</span>
+<span class="code-key">model_context_window</span> = <span id="previewContext">1000000</span>
+<span class="code-key">model_auto_compact_token_limit</span> = <span id="previewCompact">900000</span></code></pre>
+
+          <dl class="proof-list">
+            <div>
+              <dt data-i18n="file">File</dt>
+              <dd id="configPath">~/.codex/config.toml</dd>
+            </div>
+            <div>
+              <dt data-i18n="modelCeiling">Model ceiling</dt>
+              <dd>1,050,000</dd>
+            </div>
+            <div>
+              <dt data-i18n="network">Network</dt>
+              <dd data-i18n="none">None</dd>
+            </div>
+          </dl>
+
+          <div class="restart-note">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5v7l4.5 2.5M10 18a8 8 0 1 0-8-8"/></svg>
+            <p data-i18n="restart">After applying, restart Codex and begin a new task.</p>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <footer>
+      <p data-i18n="localFooter">Runs on 127.0.0.1. No telemetry. No config contents leave this device.</p>
+      <a href="https://github.com/codavidgarcia/codex-context-switch" target="_blank" rel="noreferrer">GitHub</a>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "name": "codex-context-switch",
+  "version": "1.0.0",
+  "description": "A local, one-click control panel for Codex context-window settings.",
+  "type": "module",
+  "bin": {
+    "codex-context-switch": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js",
+    "start:no-open": "node src/cli.js --no-open",
+    "test": "node --test",
+    "check": "node --check src/cli.js && node --check src/config.js && node --check public/app.js && npm test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "codex",
+    "openai",
+    "context-window",
+    "config",
+    "developer-tools"
+  ],
+  "author": "David Garcia",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codavidgarcia/codex-context-switch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/codavidgarcia/codex-context-switch/issues"
+  },
+  "homepage": "https://github.com/codavidgarcia/codex-context-switch#readme",
+  "files": [
+    "public",
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "preferGlobal": false
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Codex Context Switch",
+  "short_name": "Context Switch",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F3F5F2",
+  "theme_color": "#F3F5F2",
+  "icons": [
+    {
+      "src": "/mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
