@@ -1,19 +1,18 @@
 {
   "name": "codex-context-switch",
-  "version": "1.0.0",
-  "description": "A local, one-click control panel for Codex context-window settings.",
+  "version": "2.0.0",
+  "description": "A small desktop control for the Codex context window.",
   "type": "module",
-  "bin": {
-    "codex-context-switch": "./src/cli.js"
-  },
+  "main": "src/main.js",
   "scripts": {
-    "start": "node src/cli.js",
-    "start:no-open": "node src/cli.js --no-open",
+    "start": "electron .",
     "test": "node --test",
-    "check": "node --check src/cli.js && node --check src/config.js && node --check public/app.js && npm test"
+    "check": "node --check src/main.js && node --check src/preload.cjs && node --check src/config.js && node --check public/app.js && npm test",
+    "dist": "electron-builder --publish never",
+    "dist:win": "electron-builder --win nsis portable --x64 --publish never"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12.0"
   },
   "keywords": [
     "codex",
@@ -32,11 +31,52 @@
     "url": "https://github.com/codavidgarcia/codex-context-switch/issues"
   },
   "homepage": "https://github.com/codavidgarcia/codex-context-switch#readme",
-  "files": [
-    "public",
-    "src",
-    "LICENSE",
-    "README.md"
-  ],
-  "preferGlobal": false
+  "devDependencies": {
+    "electron": "43.4.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.codavidgarcia.codex-context-switch",
+    "productName": "Context Switch",
+    "asar": true,
+    "files": [
+      "public/**/*",
+      "src/**/*",
+      "package.json",
+      "LICENSE"
+    ],
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "win": {
+      "icon": "build/icon.svg",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "icon": "build/icon.svg",
+      "target": ["dmg", "zip"],
+      "category": "public.app-category.developer-tools"
+    },
+    "linux": {
+      "icon": "build/icon.svg",
+      "target": ["AppImage", "deb"],
+      "category": "Development"
+    }
+  }
 }

@@ -1,26 +1,25 @@
-# Codex Context Switch
+# Context Switch
 
-Tune Codex's context window from a local interface, then restore your previous setup with one click.
+A small desktop control for the Codex context window. Pick an amount, apply it, or restore the setup you had before.
 
 > Community project. Not an official OpenAI product.
 
-![Codex Context Switch interface](docs/context-switch.png)
+![Context Switch desktop app](docs/context-switch.png)
 
-## Run it
+## Download
 
-Node.js 20 or newer is the only requirement.
+Open the [latest release](https://github.com/codavidgarcia/codex-context-switch/releases/latest) and choose:
 
-```bash
-npx --yes github:codavidgarcia/codex-context-switch
-```
+- **Windows portable:** download the portable `.exe` and double-click it. Nothing is installed.
+- **Windows setup:** download the setup `.exe` for desktop and Start menu shortcuts.
+- **macOS:** download the `.dmg`.
+- **Linux:** download the `.AppImage` or `.deb`.
 
-The command starts a server bound only to `127.0.0.1` and opens the interface. Choose a preset or enter any supported value, then select **Apply setup**. To undo it, select **Restore previous setup**.
-
-Spanish is available from the `ES` switch in the header.
+The builds are not code-signed yet, so the operating system may ask you to confirm that you trust the app.
 
 ## What it changes
 
-The app manages these top-level keys in `~/.codex/config.toml` (or `$CODEX_HOME/config.toml`):
+Context Switch manages these top-level settings in `~/.codex/config.toml` (or `$CODEX_HOME/config.toml`):
 
 ```toml
 model = "gpt-5.6-sol"
@@ -28,46 +27,39 @@ model_context_window = 1000000
 model_auto_compact_token_limit = 900000
 ```
 
-You can customize the context window up to GPT-5.6 Sol's 1,050,000-token model limit and place the compaction line anywhere below it. The one-million / 900K setup is the starting recommendation shown in the interface.
+The context window can be customized from 16,000 through GPT-5.6 Sol's 1,050,000-token model limit. Compaction defaults to 90% of the selected value and can be changed under **Advanced**.
 
-After applying or restoring settings, restart Codex and begin a new task.
+Restart Codex and begin a new task after applying or restoring a setup.
 
 ## Reversibility and safety
 
-- The app remembers the exact managed lines that existed before the first apply.
-- Undo restores only those three keys; unrelated edits, comments, and TOML sections stay intact.
-- If any managed line changes outside the app, it reports a conflict and refuses to overwrite the file.
-- Writes use a same-directory replacement file so a failed write can put the original back.
-- State-changing requests require a same-origin token. The server accepts connections only from localhost.
-- There is no telemetry, analytics, remote API, or runtime dependency.
+- The first apply stores the exact managed lines that existed before the change.
+- Restore changes only those three keys; unrelated settings, comments, sections, and line endings remain intact.
+- If a managed setting changes outside the app, Context Switch refuses to overwrite it.
+- Runtime assets are bundled. The app has no telemetry, analytics, or network dependency.
+- The renderer is sandboxed, has no Node.js access, and can request only status, apply, and restore operations through its preload bridge.
 
-The local restore state lives beside the Codex config as `context-switch-state.json` and is removed after a successful restore.
-
-## Why a local app?
-
-A hosted website cannot safely edit `~/.codex/config.toml`. Context Switch is a local web interface: the browser supplies the UI, while a small zero-dependency Node process performs the file operation on the same machine.
-
-## Official references
-
-- [GPT-5.6 Sol model page](https://developers.openai.com/api/docs/models/gpt-5.6-sol) — documents the 1,050,000-token context window.
-- [Codex configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference) — documents `model`, `model_context_window`, and `model_auto_compact_token_limit`.
+Restore state lives beside the Codex config as `context-switch-state.json` and is removed after a successful restore.
 
 ## Develop
+
+Requires Node.js 22.12 or newer.
 
 ```bash
 git clone https://github.com/codavidgarcia/codex-context-switch.git
 cd codex-context-switch
-npm test
+npm install
+npm run check
 npm start
 ```
 
-Useful options:
+Build packages for the current operating system with `npm run dist`. On Windows, `npm run dist:win` produces both the installer and portable executable.
 
-```text
---no-open        Keep the browser closed
---port <number>  Use a specific localhost port
---config <path>  Use another config.toml path for testing
-```
+## References
+
+- [GPT-5.6 Sol model page](https://developers.openai.com/api/docs/models/gpt-5.6-sol)
+- [Codex configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference)
+- [Electron security checklist](https://www.electronjs.org/docs/latest/tutorial/security)
 
 ## License
 
