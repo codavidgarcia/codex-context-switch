@@ -15,4 +15,5 @@ contextBridge.exposeInMainWorld('contextSwitch', Object.freeze({
     compactLimit: settings.compactLimit,
   }),
   revert: () => invoke('context-switch:revert'),
+  setAdvanced: (open) => ipcRenderer.send('context-switch:advanced', Boolean(open)),
 }));

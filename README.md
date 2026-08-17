@@ -63,4 +63,4 @@ Build packages for the current operating system with `npm run dist`. On Windows,
 
 ## License
 
-MIT
+Apache License 2.0. See [LICENSE](LICENSE).

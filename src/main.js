@@ -4,6 +4,7 @@ import {
   ipcMain,
   net,
   protocol,
+  screen,
   session,
 } from 'electron';
 import path from 'node:path';
@@ -19,6 +20,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = path.join(ROOT, 'public');
 const APP_ORIGIN = 'app://bundle';
 const APP_ID = 'com.codavidgarcia.codex-context-switch';
+const COLLAPSED_HEIGHT = 520;
+const EXPANDED_HEIGHT = 570;
 const CONFIG_PATH = resolveConfigPath();
 const ASSET_ALLOWLIST = new Set([
   '/index.html',
@@ -85,6 +88,16 @@ function registerIpc() {
     assertTrustedSender(event);
     return safely(() => revertSettings(CONFIG_PATH));
   });
+
+  ipcMain.on('context-switch:advanced', (event, open) => {
+    assertTrustedSender(event);
+    if (!mainWindow || typeof open !== 'boolean') return;
+    const bounds = mainWindow.getBounds();
+    const height = open ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT;
+    const workArea = screen.getDisplayMatching(bounds).workArea;
+    const y = Math.max(workArea.y, Math.min(bounds.y, workArea.y + workArea.height - height));
+    mainWindow.setBounds({ ...bounds, y, height });
+  });
 }
 
 function registerAppProtocol() {
@@ -101,9 +114,9 @@ function registerAppProtocol() {
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 560,
-    height: 520,
-    minWidth: 440,
-    minHeight: 430,
+    height: COLLAPSED_HEIGHT,
+    resizable: false,
+    maximizable: false,
     show: true,
     backgroundColor: '#f4f5f3',
     autoHideMenuBar: true,

@@ -8,4 +8,4 @@ Thanks for helping improve Codex Context Switch.
 4. Add a regression test for every config-writing change.
 5. Run `npm run check` before opening a pull request.
 
-UI changes should follow `DESIGN-DNA.md`, remain usable at the minimum 440 × 430px window size, preserve keyboard focus, and honor reduced-motion preferences.
+UI changes should follow `DESIGN-DNA.md`, fit without scroll in both fixed window states, preserve keyboard focus, and honor reduced-motion preferences.
