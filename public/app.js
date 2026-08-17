@@ -1,83 +1,47 @@
-const copy = {
+const strings = {
   en: {
-    skip: 'Skip to settings',
-    loading: 'Reading config…',
-    kicker: 'GPT-5.6 SOL · LOCAL CONTROL',
-    title: 'Give Codex the room you choose.',
-    lede: 'Set the context window and compaction line. Apply once; restore the previous setup whenever you want.',
+    title: 'Context',
     contextWindow: 'Context window',
-    contextTokens: 'Context tokens',
     tokens: 'tokens',
-    presets: 'Context presets',
-    max: 'MAX',
+    modelMax: '1.05M max',
+    decisionNote: 'More context keeps more of the task available, but uses more resources.',
+    advanced: 'Advanced',
     compactAt: 'Compact history at',
-    compactNote: 'Leaves room for the answer and tool output.',
-    setNinety: 'Set 90%',
-    headroom: 'Headroom',
-    apply: 'Apply setup',
-    restore: 'Restore previous setup',
-    willWrite: 'WILL WRITE',
-    copy: 'Copy TOML',
-    copied: 'Copied',
-    file: 'File',
-    modelCeiling: 'Model ceiling',
-    network: 'Network',
-    none: 'None',
-    restart: 'After applying, restart Codex and begin a new task.',
-    localFooter: 'Runs on 127.0.0.1. No telemetry. No config contents leave this device.',
-    statusActive: 'Setup applied',
-    statusExternal: 'Settings found',
-    statusInactive: 'Not applied',
-    statusConflict: 'Config changed outside the app',
-    appliedToast: 'Setup applied. Restart Codex and begin a new task.',
-    restoredToast: 'Previous setup restored.',
-    copiedToast: 'TOML copied to the clipboard.',
-    minContext: 'Context must be at least 16,000 tokens.',
-    maxContext: 'GPT-5.6 Sol supports at most 1,050,000 tokens.',
-    compactMinimum: 'Compaction must be at least 8,000 tokens.',
-    compactBelow: 'Compaction must stay below the context window.',
-    requestFailed: 'The local operation failed. Nothing else was changed.',
-    conflictHelp: 'The managed lines changed outside this app. Review config.toml; the app will not overwrite them.',
+    useNinety: 'Use 90%',
+    apply: 'Apply',
+    applied: 'Applied',
+    restore: 'Restore original',
+    restart: 'Restart Codex.',
+    restored: 'Original restored. Restart Codex.',
+    minContext: 'Enter at least 16,000.',
+    maxContext: 'The maximum is 1,050,000.',
+    compactMinimum: 'Enter at least 8,000.',
+    compactBelow: 'Compaction must be below the context value.',
+    conflict: 'The managed settings changed outside this app. Nothing was overwritten.',
+    unsupported: 'The existing settings need a manual review before this app can change them.',
+    failed: 'The change could not be saved.',
   },
   es: {
-    skip: 'Ir a la configuración',
-    loading: 'Leyendo configuración…',
-    kicker: 'GPT-5.6 SOL · CONTROL LOCAL',
-    title: 'Dale a Codex el espacio que tú decidas.',
-    lede: 'Define la ventana de contexto y la línea de compactación. Aplícala una vez; restaura la configuración anterior cuando quieras.',
+    title: 'Contexto',
     contextWindow: 'Ventana de contexto',
-    contextTokens: 'Tokens de contexto',
     tokens: 'tokens',
-    presets: 'Valores de contexto',
-    max: 'MÁX',
+    modelMax: 'máx. 1,05M',
+    decisionNote: 'Más contexto conserva más de la tarea, pero usa más recursos.',
+    advanced: 'Avanzado',
     compactAt: 'Compactar el historial en',
-    compactNote: 'Deja espacio para la respuesta y las herramientas.',
-    setNinety: 'Usar 90%',
-    headroom: 'Margen libre',
-    apply: 'Aplicar configuración',
-    restore: 'Restaurar configuración anterior',
-    willWrite: 'ESCRIBIRÁ',
-    copy: 'Copiar TOML',
-    copied: 'Copiado',
-    file: 'Archivo',
-    modelCeiling: 'Límite del modelo',
-    network: 'Red',
-    none: 'Ninguna',
-    restart: 'Después de aplicar, reinicia Codex y comienza una tarea nueva.',
-    localFooter: 'Se ejecuta en 127.0.0.1. Sin telemetría. El contenido de tu configuración no sale del equipo.',
-    statusActive: 'Configuración aplicada',
-    statusExternal: 'Configuración detectada',
-    statusInactive: 'Sin aplicar',
-    statusConflict: 'El archivo cambió fuera de la app',
-    appliedToast: 'Configuración aplicada. Reinicia Codex y comienza una tarea nueva.',
-    restoredToast: 'Configuración anterior restaurada.',
-    copiedToast: 'TOML copiado al portapapeles.',
-    minContext: 'El contexto debe tener al menos 16.000 tokens.',
-    maxContext: 'GPT-5.6 Sol admite como máximo 1.050.000 tokens.',
-    compactMinimum: 'La compactación debe ser de al menos 8.000 tokens.',
-    compactBelow: 'La compactación debe quedar por debajo de la ventana de contexto.',
-    requestFailed: 'La operación local falló. No se cambió nada más.',
-    conflictHelp: 'Las líneas administradas cambiaron fuera de esta app. Revisa config.toml; la app no las sobrescribirá.',
+    useNinety: 'Usar 90%',
+    apply: 'Aplicar',
+    applied: 'Aplicado',
+    restore: 'Restaurar original',
+    restart: 'Reinicia Codex.',
+    restored: 'Original restaurado. Reinicia Codex.',
+    minContext: 'Ingresa al menos 16.000.',
+    maxContext: 'El máximo es 1.050.000.',
+    compactMinimum: 'Ingresa al menos 8.000.',
+    compactBelow: 'La compactación debe ser menor que el contexto.',
+    conflict: 'La configuración cambió fuera de esta app. No se sobrescribió nada.',
+    unsupported: 'La configuración existente necesita una revisión manual antes de cambiarla desde aquí.',
+    failed: 'No se pudo guardar el cambio.',
   },
 };
 
@@ -86,288 +50,257 @@ const elements = {
   contextInput: document.querySelector('#contextInput'),
   contextRange: document.querySelector('#contextRange'),
   compactInput: document.querySelector('#compactInput'),
-  contextProgress: document.querySelector('#contextProgress'),
-  compactProgress: document.querySelector('#compactProgress'),
-  headroomOutput: document.querySelector('#headroomOutput'),
-  previewContext: document.querySelector('#previewContext'),
-  previewCompact: document.querySelector('#previewCompact'),
-  configPreview: document.querySelector('#configPreview'),
-  configPath: document.querySelector('#configPath'),
-  applyButton: document.querySelector('#applyButton'),
-  revertButton: document.querySelector('#revertButton'),
+  rangeShell: document.querySelector('#rangeShell'),
+  currentNotch: document.querySelector('#currentNotch'),
+  advanced: document.querySelector('#advanced'),
   ratioButton: document.querySelector('#ratioButton'),
-  copyButton: document.querySelector('#copyButton'),
-  languageToggle: document.querySelector('#languageToggle'),
-  statusChip: document.querySelector('#statusChip'),
-  statusText: document.querySelector('#statusText'),
+  languageButton: document.querySelector('#languageButton'),
+  applyButton: document.querySelector('#applyButton'),
+  applyLabel: document.querySelector('#applyButton span'),
+  restoreButton: document.querySelector('#restoreButton'),
   formMessage: document.querySelector('#formMessage'),
-  toast: document.querySelector('#toast'),
-  presets: [...document.querySelectorAll('[data-context]')],
+  result: document.querySelector('#result'),
 };
 
 const state = {
-  language: localStorage.getItem('context-switch-language')
-    ?? (navigator.language.toLowerCase().startsWith('es') ? 'es' : 'en'),
-  token: null,
+  language: localStorage.getItem('context-switch-language'),
   status: null,
+  committedContext: null,
+  committedCompact: null,
   compactWasEdited: false,
   busy: false,
-  toastTimer: null,
+  ready: false,
 };
 
 function t(key) {
-  return copy[state.language][key] ?? copy.en[key] ?? key;
+  return strings[state.language]?.[key] ?? strings.en[key] ?? key;
+}
+
+function parseNumber(value) {
+  const digits = String(value).replace(/[^0-9]/g, '');
+  return digits ? Number(digits) : Number.NaN;
 }
 
 function formatNumber(value) {
+  if (!Number.isSafeInteger(value)) return '';
   return new Intl.NumberFormat(state.language === 'es' ? 'es-CO' : 'en-US').format(value);
 }
 
-function translate() {
+function setInputNumber(input, value) {
+  input.value = formatNumber(value);
+}
+
+function setLanguage(language) {
+  const visibleContext = parseNumber(elements.contextInput.value);
+  const visibleCompact = parseNumber(elements.compactInput.value);
+  state.language = language === 'es' ? 'es' : 'en';
+  localStorage.setItem('context-switch-language', state.language);
   document.documentElement.lang = state.language;
   document.querySelectorAll('[data-i18n]').forEach((node) => {
     node.textContent = t(node.dataset.i18n);
   });
-  document.querySelectorAll('[data-i18n-aria]').forEach((node) => {
-    node.setAttribute('aria-label', t(node.dataset.i18nAria));
-  });
-  elements.languageToggle.textContent = state.language === 'en' ? 'ES' : 'EN';
-  elements.languageToggle.setAttribute(
+  elements.contextRange.setAttribute('aria-label', t('contextWindow'));
+  elements.languageButton.textContent = state.language === 'en' ? 'ES' : 'EN';
+  elements.languageButton.setAttribute(
     'aria-label',
     state.language === 'en' ? 'Cambiar idioma a español' : 'Switch language to English',
   );
-  renderStatus();
-  renderValues();
+  if (Number.isSafeInteger(visibleContext)) setInputNumber(elements.contextInput, visibleContext);
+  if (Number.isSafeInteger(visibleCompact)) setInputNumber(elements.compactInput, visibleCompact);
+  render();
 }
 
-function numericValues() {
+function values() {
   return {
-    contextWindow: elements.contextInput.valueAsNumber,
-    compactLimit: elements.compactInput.valueAsNumber,
+    contextWindow: parseNumber(elements.contextInput.value),
+    compactLimit: parseNumber(elements.compactInput.value),
   };
 }
 
-function validate() {
-  const { contextWindow, compactLimit } = numericValues();
-  let message = state.status?.hasConflict ? t('conflictHelp') : '';
-  if (!message && (!Number.isSafeInteger(contextWindow) || contextWindow < 16_000)) message = t('minContext');
-  else if (!message && contextWindow > 1_050_000) message = t('maxContext');
-  else if (!message && (!Number.isSafeInteger(compactLimit) || compactLimit < 8_000)) message = t('compactMinimum');
-  else if (!message && compactLimit >= contextWindow) message = t('compactBelow');
+function validationMessage() {
+  const current = values();
+  if (state.status?.hasConflict) return t('conflict');
+  if (!Number.isSafeInteger(current.contextWindow) || current.contextWindow < 16_000) return t('minContext');
+  if (current.contextWindow > 1_050_000) return t('maxContext');
+  if (!Number.isSafeInteger(current.compactLimit) || current.compactLimit < 8_000) return t('compactMinimum');
+  if (current.compactLimit >= current.contextWindow) return t('compactBelow');
+  return '';
+}
 
+function isDirty() {
+  if (!state.ready) return false;
+  const current = values();
+  if (!state.status?.active) return true;
+  return current.contextWindow !== state.committedContext || current.compactLimit !== state.committedCompact;
+}
+
+function updateCurrentNotch() {
+  if (!Number.isSafeInteger(state.committedContext)) {
+    elements.currentNotch.hidden = true;
+    return;
+  }
+  const minimum = 16_000;
+  const maximum = 1_050_000;
+  const percentage = ((state.committedContext - minimum) / (maximum - minimum)) * 100;
+  elements.rangeShell.style.setProperty('--current-position', `${Math.max(0, Math.min(100, percentage))}%`);
+  elements.currentNotch.hidden = false;
+}
+
+function render() {
+  const message = validationMessage();
+  const dirty = isDirty();
   elements.formMessage.hidden = !message;
   elements.formMessage.textContent = message;
-  elements.applyButton.disabled = Boolean(message) || state.busy || !state.token;
-  return !message;
+  elements.applyButton.disabled = !state.ready || state.busy || Boolean(message) || !dirty;
+  elements.applyLabel.textContent = dirty ? t('apply') : t('applied');
+  elements.restoreButton.hidden = !state.status?.canRevert;
+  elements.restoreButton.disabled = state.busy;
+  updateCurrentNotch();
 }
 
-function renderValues() {
-  const { contextWindow, compactLimit } = numericValues();
-  const safeContext = Number.isFinite(contextWindow) ? Math.max(0, contextWindow) : 0;
-  const safeCompact = Number.isFinite(compactLimit) ? Math.max(0, compactLimit) : 0;
-  const headroom = Math.max(0, safeContext - safeCompact);
-  const percentage = safeContext > 0 ? Math.round((headroom / safeContext) * 100) : 0;
-
-  elements.contextRange.value = String(Math.min(1_050_000, safeContext));
-  elements.contextProgress.value = safeContext;
-  elements.compactProgress.value = Math.min(safeCompact, safeContext);
-  elements.previewContext.textContent = Number.isFinite(contextWindow) ? String(contextWindow) : '—';
-  elements.previewCompact.textContent = Number.isFinite(compactLimit) ? String(compactLimit) : '—';
-  elements.headroomOutput.textContent = `${formatNumber(headroom)} · ${percentage}%`;
-  elements.compactInput.max = String(Math.max(8_000, safeContext - 1_000));
-  elements.presets.forEach((button) => {
-    button.setAttribute('aria-pressed', String(Number(button.dataset.context) === contextWindow));
-  });
-  validate();
-}
-
-function renderStatus() {
-  if (!state.status) return;
-  const status = state.status;
-  let key = 'statusInactive';
-  let chipState = 'inactive';
-  if (status.hasConflict) {
-    key = 'statusConflict';
-    chipState = 'conflict';
-  } else if (status.canRevert) {
-    key = 'statusActive';
-    chipState = 'active';
-  } else if (status.active) {
-    key = 'statusExternal';
-    chipState = 'active';
+function syncContext(value) {
+  setInputNumber(elements.contextInput, value);
+  elements.contextRange.value = String(value);
+  if (!state.compactWasEdited) {
+    setInputNumber(elements.compactInput, Math.floor(value * 0.9 / 1000) * 1000);
   }
-  elements.statusChip.dataset.state = chipState;
-  elements.statusText.textContent = t(key);
-  elements.revertButton.disabled = !status.canRevert || state.busy;
-  elements.configPath.textContent = status.configPath;
-  if (status.hasConflict) {
-    elements.formMessage.hidden = false;
-    elements.formMessage.textContent = t('conflictHelp');
-    elements.applyButton.disabled = true;
-  }
+  elements.result.textContent = '';
+  render();
 }
 
 function setBusy(busy) {
   state.busy = busy;
   elements.contextInput.disabled = busy;
-  elements.compactInput.disabled = busy;
   elements.contextRange.disabled = busy;
+  elements.compactInput.disabled = busy;
   elements.ratioButton.disabled = busy;
-  elements.presets.forEach((button) => { button.disabled = busy; });
-  renderStatus();
-  validate();
+  render();
 }
 
-function showToast(message) {
-  clearTimeout(state.toastTimer);
-  elements.toast.textContent = message;
-  elements.toast.hidden = false;
-  state.toastTimer = setTimeout(() => {
-    elements.toast.hidden = true;
-  }, 3600);
+async function loadStatus() {
+  const status = await window.contextSwitch.getStatus();
+  state.status = status;
+  if (!state.language) setLanguage(status.locale?.toLowerCase().startsWith('es') ? 'es' : 'en');
+  const contextWindow = status.active
+    ? status.values.model_context_window
+    : status.recommended.contextWindow;
+  const compactLimit = status.active
+    ? status.values.model_auto_compact_token_limit
+    : status.recommended.compactLimit;
+  state.committedContext = status.active ? contextWindow : null;
+  state.committedCompact = status.active ? compactLimit : null;
+  setInputNumber(elements.contextInput, contextWindow);
+  elements.contextRange.value = String(contextWindow);
+  setInputNumber(elements.compactInput, compactLimit);
+  state.ready = true;
+  render();
 }
 
-async function getStatus() {
-  const response = await fetch('/api/status', { headers: { Accept: 'application/json' } });
-  const payload = await response.json();
-  if (!response.ok) throw new Error(payload.error ?? t('requestFailed'));
-  state.token = response.headers.get('x-context-switch-token');
-  state.status = payload;
-
-  const values = payload.values;
-  if (payload.active) {
-    elements.contextInput.value = String(values.model_context_window);
-    elements.compactInput.value = String(values.model_auto_compact_token_limit);
-  } else {
-    elements.contextInput.value = String(payload.recommended.contextWindow);
-    elements.compactInput.value = String(payload.recommended.compactLimit);
+function friendlyError(error) {
+  if (error?.code === 'CONFIG_CHANGED') return t('conflict');
+  if (['DUPLICATE_KEY', 'UNSUPPORTED_KEY_FORMAT', 'UNSUPPORTED_VALUE'].includes(error?.code)) {
+    return t('unsupported');
   }
-  renderValues();
-  renderStatus();
-}
-
-async function post(path, body = {}) {
-  const response = await fetch(path, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'X-Context-Switch-Token': state.token,
-    },
-    body: JSON.stringify(body),
-  });
-  const payload = await response.json();
-  if (!response.ok) {
-    const error = new Error(payload.error ?? t('requestFailed'));
-    error.code = payload.code;
-    throw error;
-  }
-  const nextToken = response.headers.get('x-context-switch-token');
-  if (nextToken) state.token = nextToken;
-  return payload;
+  return t('failed');
 }
 
 elements.contextInput.addEventListener('input', () => {
-  const context = elements.contextInput.valueAsNumber;
-  if (!state.compactWasEdited && Number.isFinite(context)) {
-    elements.compactInput.value = String(Math.floor(context * 0.9 / 1000) * 1000);
+  const contextWindow = parseNumber(elements.contextInput.value);
+  if (Number.isSafeInteger(contextWindow)) {
+    if (contextWindow >= 16_000 && contextWindow <= 1_050_000) {
+      elements.contextRange.value = String(contextWindow);
+    }
+    if (!state.compactWasEdited) {
+      setInputNumber(elements.compactInput, Math.floor(contextWindow * 0.9 / 1000) * 1000);
+    }
   }
-  renderValues();
+  elements.result.textContent = '';
+  render();
 });
 
-elements.contextRange.addEventListener('input', () => {
-  elements.contextInput.value = elements.contextRange.value;
-  if (!state.compactWasEdited) {
-    elements.compactInput.value = String(Math.floor(elements.contextRange.valueAsNumber * 0.9 / 1000) * 1000);
-  }
-  renderValues();
+elements.contextInput.addEventListener('focus', () => {
+  const value = parseNumber(elements.contextInput.value);
+  if (Number.isSafeInteger(value)) elements.contextInput.value = String(value);
 });
+
+elements.contextInput.addEventListener('blur', () => {
+  const value = parseNumber(elements.contextInput.value);
+  if (Number.isSafeInteger(value)) setInputNumber(elements.contextInput, value);
+});
+
+elements.contextRange.addEventListener('input', () => syncContext(elements.contextRange.valueAsNumber));
 
 elements.compactInput.addEventListener('input', () => {
   state.compactWasEdited = true;
-  renderValues();
+  elements.result.textContent = '';
+  render();
 });
 
-elements.presets.forEach((button) => {
-  button.addEventListener('click', () => {
-    const context = Number(button.dataset.context);
-    elements.contextInput.value = String(context);
-    elements.compactInput.value = String(Math.floor(context * 0.9 / 1000) * 1000);
-    state.compactWasEdited = false;
-    renderValues();
-  });
+elements.compactInput.addEventListener('focus', () => {
+  const value = parseNumber(elements.compactInput.value);
+  if (Number.isSafeInteger(value)) elements.compactInput.value = String(value);
+});
+
+elements.compactInput.addEventListener('blur', () => {
+  const value = parseNumber(elements.compactInput.value);
+  if (Number.isSafeInteger(value)) setInputNumber(elements.compactInput, value);
 });
 
 elements.ratioButton.addEventListener('click', () => {
-  const context = elements.contextInput.valueAsNumber;
-  if (Number.isFinite(context)) {
-    elements.compactInput.value = String(Math.floor(context * 0.9 / 1000) * 1000);
-    state.compactWasEdited = false;
-    renderValues();
-  }
+  const contextWindow = parseNumber(elements.contextInput.value);
+  if (!Number.isFinite(contextWindow)) return;
+  setInputNumber(elements.compactInput, Math.floor(contextWindow * 0.9 / 1000) * 1000);
+  state.compactWasEdited = false;
+  elements.result.textContent = '';
+  render();
 });
 
 elements.form.addEventListener('submit', async (event) => {
   event.preventDefault();
-  if (!validate()) return;
+  if (validationMessage()) return;
   setBusy(true);
   try {
-    state.status = await post('/api/apply', numericValues());
-    renderStatus();
-    showToast(t('appliedToast'));
+    state.status = await window.contextSwitch.apply(values());
+    state.committedContext = state.status.values.model_context_window;
+    state.committedCompact = state.status.values.model_auto_compact_token_limit;
+    elements.result.textContent = t('restart');
   } catch (error) {
     elements.formMessage.hidden = false;
-    elements.formMessage.textContent = error.message;
+    elements.formMessage.textContent = friendlyError(error);
   } finally {
     setBusy(false);
   }
 });
 
-elements.revertButton.addEventListener('click', async () => {
+elements.restoreButton.addEventListener('click', async () => {
   setBusy(true);
   try {
-    state.status = await post('/api/revert');
-    const values = state.status.values;
-    if (state.status.active) {
-      elements.contextInput.value = String(values.model_context_window);
-      elements.compactInput.value = String(values.model_auto_compact_token_limit);
-    } else {
-      elements.contextInput.value = String(state.status.recommended.contextWindow);
-      elements.compactInput.value = String(state.status.recommended.compactLimit);
-    }
+    state.status = await window.contextSwitch.revert();
+    const contextWindow = state.status.active
+      ? state.status.values.model_context_window
+      : state.status.recommended.contextWindow;
+    const compactLimit = state.status.active
+      ? state.status.values.model_auto_compact_token_limit
+      : state.status.recommended.compactLimit;
+    state.committedContext = state.status.active ? contextWindow : null;
+    state.committedCompact = state.status.active ? compactLimit : null;
+    setInputNumber(elements.contextInput, contextWindow);
+    elements.contextRange.value = String(contextWindow);
+    setInputNumber(elements.compactInput, compactLimit);
     state.compactWasEdited = false;
-    renderValues();
-    renderStatus();
-    showToast(t('restoredToast'));
+    elements.result.textContent = t('restored');
   } catch (error) {
     elements.formMessage.hidden = false;
-    elements.formMessage.textContent = error.message;
+    elements.formMessage.textContent = friendlyError(error);
   } finally {
     setBusy(false);
   }
 });
 
-elements.copyButton.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(elements.configPreview.innerText.trim());
-    showToast(t('copiedToast'));
-  } catch {
-    elements.formMessage.hidden = false;
-    elements.formMessage.textContent = t('requestFailed');
-  }
-});
+elements.languageButton.addEventListener('click', () => setLanguage(state.language === 'en' ? 'es' : 'en'));
 
-elements.languageToggle.addEventListener('click', () => {
-  state.language = state.language === 'en' ? 'es' : 'en';
-  localStorage.setItem('context-switch-language', state.language);
-  translate();
-});
-
-translate();
-getStatus().catch((error) => {
-  elements.statusChip.dataset.state = 'conflict';
-  elements.statusText.textContent = t('requestFailed');
+setLanguage(state.language ?? 'en');
+loadStatus().catch((error) => {
   elements.formMessage.hidden = false;
-  elements.formMessage.textContent = error.message;
-  elements.applyButton.disabled = true;
+  elements.formMessage.textContent = friendlyError(error);
 });
