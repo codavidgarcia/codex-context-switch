@@ -298,6 +298,9 @@ elements.restoreButton.addEventListener('click', async () => {
 });
 
 elements.languageButton.addEventListener('click', () => setLanguage(state.language === 'en' ? 'es' : 'en'));
+elements.advanced.addEventListener('toggle', () => {
+  window.contextSwitch.setAdvanced(elements.advanced.open);
+});
 
 setLanguage(state.language ?? 'en');
 loadStatus().catch((error) => {

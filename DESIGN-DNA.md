@@ -36,7 +36,7 @@ The current value is a thin stationary notch on the same scale as the selected v
 ## 5. Space and density
 
 - Compact utility density on a 4px grid.
-- The default window is 560 × 520px and must remain useful down to 440 × 430px.
+- The window is fixed at 560 × 520px and expands vertically to 570px only while Advanced is open; neither state scrolls.
 - The number and scale own the reading area; secondary controls stay below it.
 
 ## 6. Motion
@@ -79,3 +79,4 @@ The current value is a thin stationary notch on the same scale as the selected v
 | 2026-08-17 | Electron desktop app | Double-click launch and direct, local file access | Browser plus localhost server |
 | 2026-08-17 | Parameter-editor screen | Matches the single job and removes explanation from the UI | Hero, presets, status pills, TOML preview, terminal styling |
 | 2026-08-17 | Native system typography | Makes the utility feel at home on the operating system | Bundled brand font and launch-page typography |
+| 2026-08-17 | Content-sized window states | Keeps the one-task utility scroll-free without leaving permanent dead space | Scroll container or permanently tall window |

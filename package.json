@@ -1,9 +1,10 @@
 {
   "name": "codex-context-switch",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A small desktop control for the Codex context window.",
   "type": "module",
   "main": "src/main.js",
+  "desktopName": "com.codavidgarcia.codex-context-switch.desktop",
   "scripts": {
     "start": "electron .",
     "test": "node --test",
@@ -21,8 +22,11 @@
     "config",
     "developer-tools"
   ],
-  "author": "David Garcia",
-  "license": "MIT",
+  "author": {
+    "name": "David Garcia",
+    "email": "codavidgarcia@gmail.com"
+  },
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codavidgarcia/codex-context-switch.git"
@@ -43,7 +47,8 @@
       "public/**/*",
       "src/**/*",
       "package.json",
-      "LICENSE"
+      "LICENSE",
+      "NOTICE"
     ],
     "directories": {
       "output": "release",
@@ -76,7 +81,8 @@
     "linux": {
       "icon": "build/icon.svg",
       "target": ["AppImage", "deb"],
-      "category": "Development"
+      "category": "Development",
+      "syncDesktopName": true
     }
   }
 }

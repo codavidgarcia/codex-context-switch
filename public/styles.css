@@ -47,7 +47,7 @@
 html,
 body {
   min-inline-size: 0;
-  min-block-size: 100dvh;
+  block-size: 100%;
   margin: 0;
   background: var(--canvas);
   color: var(--ink);
@@ -118,7 +118,6 @@ main {
   min-inline-size: 0;
   min-block-size: 0;
   padding: var(--space-2) var(--space-5) var(--space-4);
-  overflow: auto;
 }
 
 form,
@@ -268,10 +267,10 @@ form,
 }
 
 .advanced-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: baseline;
   justify-content: space-between;
-  flex-wrap: wrap;
   gap: var(--space-3);
   padding-block: var(--space-2);
 }
@@ -367,16 +366,6 @@ form,
   .restore-action:hover,
   .text-button:hover {
     color: var(--ink);
-  }
-}
-
-@media (max-width: 30rem) {
-  .action-bar {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .result {
-    text-align: start;
   }
 }
 
